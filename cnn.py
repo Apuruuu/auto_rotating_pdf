@@ -1,18 +1,27 @@
 import numpy as np
 from keras.models import load_model
 
-class cnn():
-    def __init__(self):
-        # load model
-        self.model = load_model('model_3.h5')
-        # load labels
-        self.use_label = ['0@0','1@0','2@0','3@0','4@0','5@0','6@0','7@0','8@0','9@0',
-                        '0@90','1@90','2@90','3@90','4@90','5@90','6@90','7@90','8@90','9@90',
-                        '2@180','3@180','4@180','5@180','7@180','2@270','3@270','4@270','5@270','7@270','others']
+def Load_labels(label_file = 'labels.txt'):
+    with open(label_file) as f: return f.read().splitlines()
 
+class cnn():
+    def __init__(self , model_path = 'model_3.h5', labels_file = 'labels.txt'):
+        # load model
+        self.model = load_model(model_path)
+        # load labels
+        self.use_label = Load_labels(labels_file)
+
+    def create_model():
+        pass
+
+    def load_model():
+        pass
+
+    def train():
+        pass
+        
     def Predict(self, input_rois):
         input_rois = np.asarray(input_rois)
-        # input_rois = input_rois.reshape((len(input_rois), 28, 28, 1))
         input_rois = input_rois / 255.0
         results = []
         accuracys = []
@@ -24,13 +33,6 @@ class cnn():
 
             accuracy = predict[0][predict_num]
             accuracys.append(accuracy)
-            # if predict_num >= 20:
-            #     results.append(['other',predict[0][predict_num]])
-            #     continue
-            # if accuracy > 0.97 :
-            #     results.append(self.use_label[predict_num])
-            # else:
-            #     results.append('other')
 
             results.append(self.use_label[predict_num])
 
