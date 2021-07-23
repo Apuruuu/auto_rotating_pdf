@@ -4,7 +4,7 @@ import time
 # from numpy.lib.twodim_base import tri
 # import pdfplumber  # install
 # from PIL import Image, ImageFilter
-import PyPDF4
+from PyPDF4 import PdfFileReader, PdfFileWriter
 # from io import BytesIO
 import numpy as np
 import cv2
@@ -22,15 +22,15 @@ class main():
         self.CNN = cnn.cnn()
         print('Load Model used %.2fs'%(time.time()-self.start_time))
         for self.file_name in file_list:
-            with open(os.path.join(save_path, self.file_name), "wb") as outfile:
-                self.start_time=time.time()
-                self.open_pdf(os.path.join(laod_path, self.file_name))
-                self.output = PyPDF4.pdf.PdfFileWriter()
-                self.load_page()
-                self.output.write(outfile)
+            self.open_pdf(os.path.join(laod_path, self.file_name))
+            self.output = PdfFileWriter()
+            self.load_page()
+
+        with open(os.path.join(save_path, self.file_name), "wb") as outfile:
+            self.output.write(outfile)
 
     def open_pdf(self, file_path):
-        self.pdf = PyPDF4.pdf.PdfFileReader(file_path)
+        self.pdf =  PdfFileReader(file_path)
         # check password
         if self.pdf.isEncrypted:
             password = input()
@@ -153,7 +153,7 @@ class main():
                     print('  rotate paf %.2fs'%(time.time()-self.start_time), end='')
                     self.start_time=time.time()
 
-                    page_new = page.rotateClockwise(0)
+                    page_new = page.rotateClockwise(rotate_pdf)
                     self.output.addPage(page_new)
 
                     center = (w // 2, h // 2)
